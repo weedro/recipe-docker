@@ -1,0 +1,15 @@
+FROM alpine as source
+RUN apk add git
+RUN git clone https://github.com/weedro/recipe-generator.git
+
+FROM golang:alpine as build
+RUN apk add alpine-sdk
+COPY --from=source /recipe-generator /recipe-generator
+WORKDIR /recipe-generator
+RUN go mod download
+RUN GOOS=linux GOARCH=amd64 go build -o recipe-generator -tags musl ./cmd/recipe-generator
+
+FROM alpine
+RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+COPY --from=build /recipe-generator/recipe-generator .
+CMD [ "./recipe-generator" ]
