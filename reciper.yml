@@ -1,16 +1,28 @@
 version: '3.9'
 services:
-  test:
+  # generator:
+  #   build:
+  #     dockerfile: ./services/recipe-generator
+  #     context: .
+  #   container_name: recipe_generator
+  #   environment:
+  #     - SERVER_PORT=8080
+  #     - KAFKA_BROKER=kafka:29092
+  #     - KAFKA_TOPIC_RECEPT_CREATE=recipe-create
+  #   ports:
+  #     - 8080:8080
+  #   networks:
+  #     - reciper_net
+
+  restaurant:
     build:
-      dockerfile: ./services/recipe-generator
+      dockerfile: ./services/restaurant-client
       context: .
-    container_name: recipe_generator
+    container_name: restaurant_client
     environment:
-      - SERVER_PORT=8080
-      - KAFKA_BROKER=kafka:29092
-      - KAFKA_TOPIC_RECEPT_CREATE=recipe-create
-    ports:
-      - 8080:8080
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=29092
+      - MONGO_HOST=mongo
     networks:
       - reciper_net
       

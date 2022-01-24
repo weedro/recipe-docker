@@ -1,0 +1,12 @@
+FROM alpine as source
+RUN apk add git
+RUN git clone https://github.com/weedro/restaurant-client.git
+
+FROM gradle:jdk16 as build
+COPY --from=source /restaurant-client /restaurant-client
+WORKDIR /restaurant-client
+RUN gradle clean build
+
+FROM adoptopenjdk/openjdk16:jre
+COPY --from=build /restaurant-client/build/libs/restaurant-client-*-all.jar /app/app.jar
+CMD [ "java", "-jar", "/app/app.jar" ]
