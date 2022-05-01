@@ -25,7 +25,7 @@ services:
       - MONGO_HOST=mongo
     networks:
       - reciper_net
-      
+
 networks:
   reciper_net:
     name: reciper_network
